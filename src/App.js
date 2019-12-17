@@ -1,11 +1,28 @@
 import React, { useState, useRef } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { Canvas, useRender , extend} from "react-three-fiber";
+import { Canvas, useRender , extend, useThree} from "react-three-fiber";
 import { OrbitControls} from "three/examples/jsm/controls/OrbitControls"
 import { useSpring, a } from "react-spring/three";
 
 extend({OrbitControls});
+
+const Controls = () => {
+  const orbitRef = useRef()
+  const { camera, gl } = useThree()
+
+  useRender(() => {
+    orbitRef.current.update()
+  })
+
+  return (
+    <orbitControls
+      autoRotate
+      args={[camera, gl.domElement]}
+      ref={orbitRef}
+    />
+  )
+}
 const Box = () => {
   const meshRef = useRef();
   const [hovered, setHovered] = useState(false);
@@ -37,6 +54,7 @@ function App() {
   return (
       <Canvas>
         <Box />
+        <Controls />
       </Canvas>
   );
 }
